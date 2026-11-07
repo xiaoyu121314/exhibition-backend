@@ -1,0 +1,8 @@
+# 隔离 MySQL 测试配置示例。复制到 target 中填写后，通过 -TestDatasourceConfig 显式指定。
+# 集成测试会清空 exh_* 表，只允许本机 exhibition_test 库，禁止填写业务数据库。
+# @author MoShangHuaKai
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1:13357/exhibition_test?useSSL=false&serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: ""

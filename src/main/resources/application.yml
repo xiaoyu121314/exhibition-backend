@@ -1,0 +1,24 @@
+# @author MoShangHuaKai
+server:
+  port: 8080
+spring:
+  # 分别加载数据源、展厅业务和 Swagger 文档配置；部署时可在 JAR 同级 config 目录修改。
+  profiles:
+    active: datasource,exhibition,swagger
+  task:
+    scheduling:
+      pool:
+        size: 4
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 55MB
+  jackson:
+    time-zone: Asia/Shanghai
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+# 媒体 API 的 POST 表单含设备凭据；即使排查其他功能，也不启用此 HTTP 客户端的调试输出。
+logging:
+  level:
+    org.springframework.web.client.RestTemplate: INFO

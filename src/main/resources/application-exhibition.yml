@@ -1,0 +1,75 @@
+# 展厅业务、图片存储及摄像头配置，直接填写实际值。
+# @author MoShangHuaKai
+exhibition:
+  hall-id: first-floor
+  # 所有相对路径以 JAR 所在目录为基准，与启动命令的工作目录无关。
+  # 展示文案在 JAR 同级 config 目录中，支持每5秒热更新。
+  display-file: ./config/exhibition-display.yml
+  # 上传文件统一存储根目录，工作人员照片保存至 staff/日期/图片ID.jpg；绝对路径不受 JAR 位置影响。
+  # 目录在保存文件时自动创建，运行账号需具备写入权限；修改后重启后端生效。
+  storage-directory: E:/tengyuan/uploadPath
+  # 管理、大屏、图片和摄像头回调直接访问，不设置接口访问令牌或设备签名。
+  retention-days: 30
+  max-import-rows: 500
+  max-export-rows: 500
+  heartbeat-seconds: 30
+  # 2026-11-06 真机回调已确认：personId/uniqueId 均为 FaceUUID，personType 为工作人员库 GroupID2。
+  # enabled 同时启用工作人员日去重和心跳中的识别上报；已有人员须先建立设备身份基线。
+  recognition:
+    enabled: true
+    protocol-verified: true
+    ack-verified: true
+    channel-id: 1
+    # 回调字段：personId或uniqueId；列表来源：FACE_UUID、PERSON_ID或UNIQUE_ID。
+    identity-field: personId
+    identity-source: FACE_UUID
+    # 实机 personType 已与下方 face-group-id 对照；groupId 为空，不用它关联脸库。
+    group-field: personType
+    group-value: "0ed4e7eb-19e8-435a-b7ef-7e5b7149cf38"
+    # 后台工作人员统计采用 80 分门槛；本次真实命中为 91.283485 分，不修改设备脸库阈值。
+    min-similarity: 80
+    # 真机 personId 为 UUID，ACK 按字符串回显；未命中时沿用 0/空 uniqueId，不创建人员。
+    ack-person-id-type: STRING
+    unmatched-person-id: "0"
+    unmatched-unique-id: ""
+  # 独立本机CPU服务用于所有人员的当日去重；2026-11-06已完成验证并经确认启用。
+  # 已执行 sql/face-feature-upgrade.sql，模型服务监听本机18090；后续部署也须先准备新表和模型。
+  face-feature:
+    enabled: true
+    base-url: http://127.0.0.1:18090
+    model-id: opencv-sface-2021dec
+    # SFace余弦相似度，不能填写设备0~100的match分数；需用现场不同人员样本验收。
+    min-similarity: 0.363
+    connect-timeout-ms: 1500
+    read-timeout-ms: 10000
+    batch-size: 10
+    max-attempts: 3
+    retry-seconds: 30
+  # 按需将 RTSP 转为 WebRTC，多个观看端共用一路拉流；修改后重启生效。
+  live:
+    # 媒体服务就绪后设为 true；浏览器只访问同源信令，无需管理密钥。
+    enabled: true
+    # 现场 VLC 已验证 MAIN 主码流；RTSP 与管理账号相同，引用现有配置，不重复保存明文凭据。
+    # Spring 在运行时解析占位符，Maven 打包不会将账号密码展开到此地址。
+    rtsp-url: rtsp://${exhibition.devices[0].username}:${exhibition.devices[0].password}@192.168.0.232:554/live/0/MAIN
+    # ZLMediaKit 独立运行，HTTP API 仅允许本机；视频通过 UDP/TCP 8000 直连浏览器。
+    zlm-base-url: http://127.0.0.1:9999
+    zlm-secret: ${ZLM_SECRET:}
+    # IDEA 无环境变量时读取 target/data/media；JAR 读取同级 data/media。
+    zlm-secret-file: ./data/media/zlm-secret.txt
+    # 首次拉流就绪轮询时间；单次网络调用另有连接/读取超时，失败释放代理并返回 503。
+    startup-timeout-seconds: 15
+    # 观看端每 15 秒保活；连续 60 秒无观看者后停止拉流，下次请求重新启动。
+    idle-timeout-seconds: 60
+  devices:
+    - serial-number: "I21601A695D5E72985C571C"
+      # 主动同步工作人员的设备地址及管理凭据；接收抓拍回调无需凭据。
+      base-url: http://192.168.0.232
+      username: "admin"
+      password: "Admin123"
+      # 填已有脸库的 GroupID2，以及已设置到设备的拥有者 Ownner 原值；不是每次计算的安全码。
+      face-group-id: "0ed4e7eb-19e8-435a-b7ef-7e5b7149cf38"
+      owner-identifier: "I21601A695D5E72985C571C"
+      connect-timeout-ms: 3000
+      read-timeout-ms: 15000
+

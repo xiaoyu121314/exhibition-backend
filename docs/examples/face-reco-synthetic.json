@@ -1,0 +1,30 @@
+{
+  "_sample": {
+    "kind": "SYNTHETIC_ONLY",
+    "note": "模拟契约，不证明uniqueId等于FaceUUID；替换实际序列号、事件时间、已验证身份及JPEG/PNG Base64，禁止作为生产证据",
+    "@author": "MoShangHuaKai"
+  },
+  "operator": "FaceReco",
+  "deviceInfo": {
+    "serialNumber": "REPLACE_DEVICE_SN"
+  },
+  "info": {
+    "eventId": "synthetic-event-001",
+    "time": "2026-11-05T16:00:00+08:00",
+    "matchNumber": 1,
+    "direction": "none",
+    "personInfo": {
+      "personId": "123",
+      "uniqueId": "REPLACE_VERIFIED_IDENTITY",
+      "personType": "REPLACE_VERIFIED_STAFF_GROUP",
+      "match": "88.083099",
+      "serial": 0
+    },
+    "CaptureImage": {
+      "picture": "REPLACE_WITH_REAL_IMAGE_BASE64"
+    },
+    "faceFeature": {
+      "note": "仅保留诊断属性，不计算向量"
+    }
+  }
+}

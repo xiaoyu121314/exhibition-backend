@@ -1,0 +1,4 @@
+# CPU 推理环境；固定已核对的发行版本，避免部署时随最新大版本改变模型行为。
+# @author MoShangHuaKai
+numpy==2.5.4
+opencv-python-headless==4.13.0.92

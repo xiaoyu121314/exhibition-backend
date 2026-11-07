@@ -1,0 +1,12 @@
+# @author MoShangHuaKai
+/target/
+/data/
+.idea/
+*.iml
+/config/application-local.yml
+/face-service/.venv/
+/face-service/models/
+__pycache__/
+/media/
+*.log
+*.pid

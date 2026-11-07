@@ -1,0 +1,8 @@
+# 数据源配置，目标 MySQL 5.7.44。连接信息直接填写，不读取环境变量。
+# @author MoShangHuaKai
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3307/exhibition?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&useSSL=false
+    username: root
+    password: root

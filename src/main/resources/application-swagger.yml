@@ -1,0 +1,18 @@
+# Swagger 独立配置，构建时复制到 JAR 同级 config 目录；不读取环境变量。 @author MoShangHuaKai
+springdoc:
+  # 仅收录本项目业务接口，避免框架内部端点出现在接口清单中。
+  packages-to-scan: com.moshanghuakai.exhibition
+  paths-to-match: /api/**
+  # 错误统一在文档配置中说明，避免 ControllerAdvice 推断出不准确的成功响应类型。
+  override-with-generic-response: false
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: method
+    doc-expansion: none
+    display-request-duration: true
+    disable-swagger-default-url: true

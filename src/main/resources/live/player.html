@@ -1,0 +1,48 @@
+<!doctype html>
+<!-- 独立播放入口，也可通过 iframe 嵌入已有大屏。 @author MoShangHuaKai -->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>展厅实时预览</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; color: #e8edf4; background: #10151d; font: 16px/1.6 system-ui, sans-serif; }
+    main { max-width: 1200px; margin: 0 auto; padding: 24px; }
+    header, footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    h1 { font-size: 22px; margin: 0; }
+    video { display: block; width: 100%; aspect-ratio: 16/9; background: #05080d; margin: 20px 0; border-radius: 8px; object-fit: contain; }
+    #status { color: #aebacb; margin: 8px 0; }
+    button { border: 1px solid #52647d; background: #223047; color: white; padding: 9px 18px; border-radius: 6px; cursor: pointer; font: inherit; }
+    button:hover { background: #304563; }
+    button:focus-visible { outline: 3px solid #73b5ff; outline-offset: 3px; }
+    .hint { color: #8e9bb0; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main>
+    <header><h1>展厅实时预览</h1><span class="hint">实时视频 · 无音频</span></header>
+    <video id="video" autoplay muted playsinline controls aria-label="摄像头实时视频"></video>
+    <footer>
+      <p id="status" role="status" aria-live="polite">正在准备播放…</p>
+      <div><button id="connect" type="button">重新连接</button> <button id="stop" type="button">停止播放</button></div>
+    </footer>
+    <p class="hint">连接中断时会自动重试。离开页面后自动释放观看连接。</p>
+  </main>
+  <script src="./player.js"></script>
+  <script>
+    // 组件与页面同源，部署在 context-path 下时使用当前页面路径定位接口。
+    const endpoint = location.pathname.replace(/\/player\/?$/, '');
+    const player = new ExhibitionLivePlayer(document.getElementById('video'), {
+      endpoint,
+      onState: (state, message) => {
+        document.getElementById('status').textContent = message;
+        document.getElementById('status').dataset.state = state;
+      }
+    });
+    document.getElementById('connect').onclick = () => player.start();
+    document.getElementById('stop').onclick = () => player.stop();
+    player.start();
+  </script>
+</body>
+</html>
